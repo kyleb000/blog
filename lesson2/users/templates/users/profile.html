@@ -1,0 +1,43 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% block title-name %}
+<title>{{ user.first_name }} {{ user.last_name }}: Profile</title>
+{% endblock title-name %}
+{% block content %}
+   <div class="content-section">
+  <div class="media">
+    <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+    <div class="media-body">
+      <h2 class="account-heading">{{ user.first_name }} {{ user.last_name }}</h2>
+        <p class="text-secondary"><small>Username: </small>{{ user.username }}</p>
+      <p class="text-secondary"><small>Email Address: </small>{{ user.email }}</p>
+        <p><small>Biography:</small></p>
+        <p>{{ user.profile.bio }}</p>
+        {% if not edit and editable%}
+        <form action="{% url 'user-profile' edit=0%}?edit=true">
+            <button class="btn btn-outline-info" type="submit" formaction="{% url 'user-profile' edit=1%}">Edit Profile</button>
+        </form>
+        {% endif %}
+    </div>
+  </div>
+
+       {% if edit %}
+          <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">
+                            Edit Profile
+                        </legend>
+                        {{ u_form|crispy }}
+                        {{ p_form|crispy }}
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-outline-info" type="submit">Save Changes</button>
+                        <form action="{% url 'user-profile' edit=0%}">
+                            <button class="btn btn-outline-info" type="submit" formaction="{% url 'user-profile' edit=0%}">Cancel</button>
+                        </form>
+                    </div>
+          </form>
+      {% endif %}
+</div>
+{% endblock content %}
