@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 from datetime import datetime
 import calendar
+from django.urls import reverse
 
 
 def get_timestamp():
@@ -22,3 +23,6 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('blog-detail', kwargs={'pk': self.id})
